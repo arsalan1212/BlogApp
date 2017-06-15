@@ -76,10 +76,12 @@ public class postActivity extends AppCompatActivity {
         //showing the progress dialog
         progressDialog.setMessage("Posting to Blog....");
         progressDialog.setCancelable(false);
-        progressDialog.show();
+
 
         //storing the image into firbase storage
         if(!TextUtils.isEmpty(title_val) && !TextUtils.isEmpty(description_val) && imageUri!=null){
+
+            progressDialog.show();
 
             StorageReference filepath=storageReference.child("blog_images").child(imageUri.getLastPathSegment());
             filepath.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
