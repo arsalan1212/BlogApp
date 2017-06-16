@@ -64,6 +64,9 @@ public class LoginUser extends AppCompatActivity {
                     if(task.isSuccessful()){
                         CheckUserExist();
 
+                    }else{
+                        progressDialog.dismiss();
+                        Toast.makeText(LoginUser.this, "Signing Error....", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -71,6 +74,7 @@ public class LoginUser extends AppCompatActivity {
         }
         else{
             Toast.makeText(this, "Fill the Fields.....", Toast.LENGTH_SHORT).show();
+
         }
 
 
@@ -78,10 +82,6 @@ public class LoginUser extends AppCompatActivity {
     }
 
     private void CheckUserExist() {
-    }
-
-    //User Register
-    public void UserRegister(View view){
 
         final String userId=mAuth.getCurrentUser().getUid();
 
@@ -97,7 +97,9 @@ public class LoginUser extends AppCompatActivity {
                     startActivity(intent);
 
                 }else{
+                    progressDialog.dismiss();
                     Toast.makeText(LoginUser.this, "YOu need to setup your Account", Toast.LENGTH_SHORT).show();
+
                 }
             }
 
@@ -106,6 +108,15 @@ public class LoginUser extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    //User Register Btn
+    public void UserRegister(View view){
+
+        Intent intent=new Intent(LoginUser.this,RegisterUser.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
 
     }
 }

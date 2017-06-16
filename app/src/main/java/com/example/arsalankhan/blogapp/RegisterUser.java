@@ -72,6 +72,9 @@ public class RegisterUser extends AppCompatActivity {
                         Intent RegisterIntent= new Intent(RegisterUser.this,LoginUser.class);
                         RegisterIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(RegisterIntent);
+                    }else{
+                        progressDialog.dismiss();
+                        Toast.makeText(RegisterUser.this, "User Registrating Error...", Toast.LENGTH_SHORT).show();
                     }
                 }
             });

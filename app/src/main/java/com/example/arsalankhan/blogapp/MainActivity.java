@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
                 if(firebaseAuth.getCurrentUser()==null){
+
                    Intent LoginIntent=new Intent(MainActivity.this,LoginUser.class);
                     LoginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(LoginIntent);
@@ -100,6 +101,13 @@ public class MainActivity extends AppCompatActivity {
 
         if(item.getItemId()==R.id.addpost){
             startActivity(new Intent(this,postActivity.class));
+        }
+        else if(item.getItemId()==R.id.logout){
+
+            mAuth.signOut();
+            Intent intentLogin=new Intent(this,LoginUser.class);
+            intentLogin.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intentLogin);
         }
 
         return super.onOptionsItemSelected(item);
