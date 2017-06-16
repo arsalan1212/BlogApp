@@ -44,6 +44,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
 
         holder.textViewTitle.setText(blog.getTitle());
         holder.textViewDescription.setText(blog.getDescription());
+
         Picasso.with(context).load(blog.getImage()).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imageView, new Callback() {
             @Override
             public void onSuccess() {

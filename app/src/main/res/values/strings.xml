@@ -4,4 +4,12 @@
     <string name="post_description">Post Description....</string>
     <string name="post_title">Post Title....</string>
     <string name="upload_image">Upload Image</string>
+    <string name="login">Login</string>
+    <string name="password">Password...</string>
+    <string name="username_hint">UserName...</string>
+    <string name="need_an_account">Need an Account?</string>
+    <string name="name">Name....</string>
+    <string name="email">Email.....</string>
+    <string name="password_register">Password....</string>
+    <string name="register_text">Register</string>
 </resources>

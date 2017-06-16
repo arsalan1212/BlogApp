@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_login_user"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="20dp"
+    tools:context="com.example.arsalankhan.blogapp.LoginUser">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/LoginUserNameField"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:hint="@string/username_hint" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:layout_below="@+id/LoginUserNameField"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/LoginPasswordField"
+        android:layout_marginTop="20dp"
+        android:hint="@string/password" />
+
+    <Button
+        android:text="@string/login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/LoginPasswordField"
+        android:layout_centerHorizontal="true"
+        android:textAllCaps="false"
+        android:layout_marginTop="20dp"
+        android:onClick="UserLogin"
+        android:id="@+id/LoginBtn" />
+
+    <Button
+        android:text="@string/need_an_account"
+        android:textAllCaps="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/RegisterUser"
+        android:onClick="UserRegister"/>
+</RelativeLayout>

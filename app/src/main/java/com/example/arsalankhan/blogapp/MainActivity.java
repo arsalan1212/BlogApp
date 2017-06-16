@@ -1,6 +1,7 @@
 package com.example.arsalankhan.blogapp;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecycleView;
     private DatabaseReference databaseReference;
     private ArrayList<Blog> arrayListBlog;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +34,19 @@ public class MainActivity extends AppCompatActivity {
 
         //sync the data in local database
         databaseReference.keepSynced(true);
+
+        mAuth=FirebaseAuth.getInstance();
+        mAuthStateListener =new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+
+                if(firebaseAuth.getCurrentUser()==null){
+                   Intent LoginIntent=new Intent(MainActivity.this,LoginUser.class);
+                    LoginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(LoginIntent);
+                }
+            }
+        };
 
         mRecycleView= (RecyclerView) findViewById(R.id.recycleView);
         mRecycleView.setHasFixedSize(true);
@@ -63,6 +80,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        mAuth.addAuthStateListener(mAuthStateListener);
+    }
 
     // for menu
     @Override
