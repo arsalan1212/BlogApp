@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mRecycleView;
     private DatabaseReference databaseReference;
+    private DatabaseReference mDatabaseUser;
     private ArrayList<Blog> arrayListBlog;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
@@ -32,8 +33,12 @@ public class MainActivity extends AppCompatActivity {
 
         databaseReference= FirebaseDatabase.getInstance().getReference().child("Blog");
 
+        mDatabaseUser=FirebaseDatabase.getInstance().getReference().child("User");
+
         //sync the data in local database
         databaseReference.keepSynced(true);
+        mDatabaseUser.keepSynced(true);
+
 
         mAuth=FirebaseAuth.getInstance();
         mAuthStateListener =new FirebaseAuth.AuthStateListener() {
@@ -85,9 +90,39 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        CheckUserExist();
         mAuth.addAuthStateListener(mAuthStateListener);
     }
 
+    //checking the user
+
+    private void CheckUserExist(){
+
+        if(mAuth.getCurrentUser() !=null){
+
+            final String userID=mAuth.getCurrentUser().getUid();
+
+            mDatabaseUser.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    if(!dataSnapshot.hasChild(userID)){
+                        Intent AccountIntent=new Intent(MainActivity.this, SetupAccount.class);
+                        AccountIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(AccountIntent);
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+
+    }
     // for menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

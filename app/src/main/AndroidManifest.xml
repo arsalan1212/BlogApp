@@ -22,7 +22,8 @@
         <activity android:name=".postActivity" />
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity" />
         <activity android:name=".LoginUser" />
-        <activity android:name=".RegisterUser"></activity>
+        <activity android:name=".RegisterUser" />
+        <activity android:name=".SetupAccount"></activity>
     </application>
 
 </manifest>

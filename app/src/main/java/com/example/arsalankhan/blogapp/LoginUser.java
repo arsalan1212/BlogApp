@@ -25,7 +25,7 @@ public class LoginUser extends AppCompatActivity {
 
     private EditText editTextUserName, editTextPassword;
     private FirebaseAuth mAuth;
-    private DatabaseReference mDatabase;
+    private DatabaseReference mDatabaseUser;
     private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,8 @@ public class LoginUser extends AppCompatActivity {
         progressDialog=new ProgressDialog(this);
 
         mAuth=FirebaseAuth.getInstance();
-        mDatabase= FirebaseDatabase.getInstance().getReference().child("User");
+        mDatabaseUser = FirebaseDatabase.getInstance().getReference().child("User");
+        mDatabaseUser.keepSynced(true);
     }
 
 
@@ -62,6 +63,7 @@ public class LoginUser extends AppCompatActivity {
 
 
                     if(task.isSuccessful()){
+                        progressDialog.dismiss();
                         CheckUserExist();
 
                     }else{
@@ -85,20 +87,21 @@ public class LoginUser extends AppCompatActivity {
 
         final String userId=mAuth.getCurrentUser().getUid();
 
-        mDatabase.addValueEventListener(new ValueEventListener() {
+        mDatabaseUser.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 if(dataSnapshot.hasChild(userId)){
 
-                    progressDialog.dismiss();
                     Intent intent=new Intent(LoginUser.this,MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
 
                 }else{
-                    progressDialog.dismiss();
-                    Toast.makeText(LoginUser.this, "YOu need to setup your Account", Toast.LENGTH_SHORT).show();
+
+                    Intent intent=new Intent(LoginUser.this,SetupAccount.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
 
                 }
             }
