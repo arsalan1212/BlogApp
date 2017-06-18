@@ -60,12 +60,12 @@ public class RegisterUser extends AppCompatActivity {
 
                     if(task.isSuccessful()){
 
-                        String UserID= mAuth.getCurrentUser().getUid();
-
-                        DatabaseReference databaseReference=mDatabase.child(UserID);
-
-                        databaseReference.child("name").setValue(name);
-                        databaseReference.child("image").setValue("default");
+//                        String UserID= mAuth.getCurrentUser().getUid();
+//
+//                        DatabaseReference databaseReference=mDatabase.child(UserID);
+//
+//                        databaseReference.child("name").setValue(name);
+//                        databaseReference.child("image").setValue("default");
 
                         progressDialog.dismiss();
 

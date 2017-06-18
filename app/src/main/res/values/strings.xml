@@ -12,4 +12,7 @@
     <string name="email">Email.....</string>
     <string name="password_register">Password....</string>
     <string name="register_text">Register</string>
+    <string name="profile_image_setup">Profile Image setup</string>
+    <string name="enter_the_name_for_display">Enter the Name for Display</string>
+    <string name="submit_btn">Submit</string>
 </resources>

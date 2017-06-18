@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -13,9 +14,16 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -32,6 +40,10 @@ public class postActivity extends AppCompatActivity {
     private Uri imageUri=null;
     private ProgressDialog progressDialog;
 
+    private FirebaseAuth mAuth;
+    private FirebaseUser mCurrentUser;
+    private DatabaseReference mDatabaseUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +54,11 @@ public class postActivity extends AppCompatActivity {
 
         databaseReference= FirebaseDatabase.getInstance().getReference().child("Blog");
         storageReference= FirebaseStorage.getInstance().getReference();
+
+        mAuth=FirebaseAuth.getInstance();
+        mCurrentUser=mAuth.getCurrentUser();
+
+        mDatabaseUser=FirebaseDatabase.getInstance().getReference().child("User").child(mCurrentUser.getUid());
 
         progressDialog=new ProgressDialog(this);
 
@@ -88,17 +105,44 @@ public class postActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                    Uri downloadUri=taskSnapshot.getDownloadUrl();
+                    final Uri downloadUri=taskSnapshot.getDownloadUrl();
 
-                    DatabaseReference newPost=databaseReference.push();
+                    final DatabaseReference newPost=databaseReference.push();
 
-                    newPost.child("title").setValue(title_val);
-                    newPost.child("description").setValue(description_val);
-                    newPost.child("image").setValue(downloadUri.toString());
+
+
+                    mDatabaseUser.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            newPost.child("title").setValue(title_val);
+                            newPost.child("description").setValue(description_val);
+                            newPost.child("image").setValue(downloadUri.toString());
+                            newPost.child("UserId").setValue(mCurrentUser.getUid());
+                            newPost.child("name").setValue(dataSnapshot.child("name").getValue()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+
+                                    if(task.isSuccessful()){
+
+                                        Intent intent=new Intent(postActivity.this,MainActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        startActivity(intent);
+
+                                    }
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
 
                     progressDialog.dismiss();
 
-                    startActivity(new Intent(postActivity.this,MainActivity.class));
+
                 }
             });
         }

@@ -83,6 +83,9 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
+        CheckUserExist();
     }
 
 
@@ -90,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        CheckUserExist();
         mAuth.addAuthStateListener(mAuthStateListener);
     }
 

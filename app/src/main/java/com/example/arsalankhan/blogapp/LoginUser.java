@@ -135,6 +135,7 @@ public class LoginUser extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                         }
                         progressDialog.dismiss();
+                        CheckUserExist();
                         // ...
                     }
                 });
@@ -181,33 +182,37 @@ public class LoginUser extends AppCompatActivity {
 
     private void CheckUserExist() {
 
-        final String userId=mAuth.getCurrentUser().getUid();
 
-        mDatabaseUser.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+        if (mAuth.getCurrentUser() != null) {
 
-                if(dataSnapshot.hasChild(userId)){
+            final String userId = mAuth.getCurrentUser().getUid();
 
-                    Intent intent=new Intent(LoginUser.this,MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
+            mDatabaseUser.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                }else{
+                    if (dataSnapshot.hasChild(userId)) {
 
-                    Intent intent=new Intent(LoginUser.this,SetupAccount.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
+                        Intent intent = new Intent(LoginUser.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+
+                    } else {
+
+                        Intent intent = new Intent(LoginUser.this, SetupAccount.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
                 }
-            }
+            });
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
+        }
     }
 
     //User Register Btn
