@@ -6,16 +6,22 @@ package com.example.arsalankhan.blogapp;
 
 public class Blog {
 
-    private String image,title,description;
+    private String image;
+    private String title;
+    private String description;
+
+
+    private String userName;
 
     public Blog(){
         //TODO: Empty constructor important for Firebase otherwise App crash
     }
 
-    public Blog(String image, String title, String description) {
+    public Blog(String image, String title, String description,String userName) {
         this.image = image;
         this.title = title;
         this.description = description;
+        this.userName=userName;
     }
 
     public String getImage() {
@@ -29,4 +35,9 @@ public class Blog {
     public String getDescription() {
         return description;
     }
+
+    public String getUserName() {
+        return userName;
+    }
+
 }

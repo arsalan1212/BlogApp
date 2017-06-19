@@ -44,6 +44,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
 
         holder.textViewTitle.setText(blog.getTitle());
         holder.textViewDescription.setText(blog.getDescription());
+        holder.textViewUserName.setText("Post by: "+blog.getUserName());
+        
 
         Picasso.with(context).load(blog.getImage()).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imageView, new Callback() {
             @Override
@@ -81,7 +83,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
     class MyViewHolder extends RecyclerView.ViewHolder{
 
         ImageView imageView;
-        TextView textViewTitle,textViewDescription;
+        TextView textViewTitle,textViewDescription,textViewUserName;
         View progressDialog;
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -89,6 +91,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
             imageView= (ImageView) itemView.findViewById(R.id.postImage);
             textViewTitle= (TextView) itemView.findViewById(R.id.TextViewBlogTitle);
             textViewDescription= (TextView) itemView.findViewById(R.id.TextViewblogDescription);
+            textViewUserName= (TextView) itemView.findViewById(R.id.textViewUserName);
             progressDialog=itemView.findViewById(R.id.progressDialog);
         }
     }

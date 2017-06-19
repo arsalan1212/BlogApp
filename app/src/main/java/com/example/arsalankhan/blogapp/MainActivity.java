@@ -1,20 +1,28 @@
 package com.example.arsalankhan.blogapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -74,8 +82,9 @@ public class MainActivity extends AppCompatActivity {
                     arrayListBlog.add(blog);
                 }
 
-                MyAdapter adapter=new MyAdapter(MainActivity.this,arrayListBlog);
-                mRecycleView.setAdapter(adapter);
+                // INSTEAD OF THIS USE Firebase Ui adapter
+//                MyAdapter adapter=new MyAdapter(MainActivity.this,arrayListBlog);
+//                mRecycleView.setAdapter(adapter);
             }
 
             @Override
@@ -94,6 +103,86 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         mAuth.addAuthStateListener(mAuthStateListener);
+
+        FirebaseRecyclerAdapter<Blog,BlogViewHolder> firebaseAdapter=new FirebaseRecyclerAdapter<Blog,BlogViewHolder>(
+                Blog.class,
+                R.layout.single_row,
+                BlogViewHolder.class,
+                databaseReference
+        ){
+            @Override
+            protected void populateViewHolder(BlogViewHolder viewHolder, Blog model, int position) {
+
+                viewHolder.setTitle(model.getTitle());
+                viewHolder.setDescription(model.getDescription());
+                viewHolder.setUserName(model.getUserName());
+                viewHolder.setImage(getApplicationContext(),model.getImage());
+
+            }
+        };
+
+       mRecycleView.setAdapter(firebaseAdapter);
+    }
+
+
+    //for creating a view holder class
+
+    public static class BlogViewHolder extends RecyclerView.ViewHolder{
+
+        View view;
+        public BlogViewHolder(View itemView) {
+            super(itemView);
+            view=itemView;
+        }
+
+        public void setTitle(String title){
+            TextView textViewTitle= (TextView) view.findViewById(R.id.TextViewBlogTitle);
+            textViewTitle.setText(title);
+        }
+
+        public void setDescription(String desc){
+            TextView textViewDesc= (TextView) view.findViewById(R.id.TextViewblogDescription);
+            textViewDesc.setText(desc);
+        }
+
+        public void setUserName(String name){
+            TextView textViewuserName= (TextView) view.findViewById(R.id.textViewUserName);
+            textViewuserName.setText("Post By: "+name);
+        }
+
+        public void setImage(final Context context, final String imageUri){
+            final ImageView imageView= (ImageView) itemView.findViewById(R.id.postImage);
+
+            Picasso.with(context).load(imageUri).networkPolicy(NetworkPolicy.OFFLINE).into(imageView, new Callback() {
+                @Override
+                public void onSuccess() {
+                    // When onSuccess execute this means data fetch from local database
+
+                }
+
+                @Override
+                public void onError() {
+
+                    //when onError execute that's means no data in local database
+                    // so we fetch data from Firebase database
+
+                    Picasso.with(context).load(imageUri).into(imageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError() {
+
+                        }
+                    });
+                }
+            });
+
+        }
+
+
     }
 
     //checking the user
